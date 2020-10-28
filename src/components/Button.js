@@ -1,9 +1,8 @@
 import React from "react";
 
-import "components/Button.scss"; // styling
+import "components/Button.scss";
 
-// props.disabled = true, props.onClick = function, props.children = Disabled
-function Button(props) {
+export default function Button(props) {
    let buttonClass = "button";
 
    if (props.confirm) {
@@ -15,14 +14,14 @@ function Button(props) {
    }
 
    return (
-      // <button className={buttonClass} >{props.children}</button>
-      // <p>TEST
-      <button className={buttonClass} onClick={props.onClick} disabled={props.disabled}>
-        {props.children}
+      <button
+         className={buttonClass}
+         onClick={props.onClick}
+         disabled={props.disabled}
+      >
+         {props.children}
       </button>
-      // </p>
-    );
+   );
 }
 
-export default Button;
 
