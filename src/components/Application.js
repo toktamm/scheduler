@@ -93,7 +93,7 @@ export default function Application(props) {
   });
 
 
-  const dailyAppointments = [];
+  let dailyAppointments = [];
 
   // setDay function can remain because we are only using it to update our DayList component
   const setDay = day => setState({ ...state, day });
