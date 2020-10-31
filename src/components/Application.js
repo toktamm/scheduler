@@ -34,6 +34,21 @@ export default function Application(props) {
   dailyAppointments = getAppointmentsForDay(state, state.day);
 
 
+  const schedule = dailyAppointments.map(appointment => {
+    const interview = getInterview(state, appointment.interview);
+    // optional approach:
+    // return <Appointment key={appointment.id}  {...appointment} interview={interview} />
+    return (
+      <Appointment
+        key={appointment.id}
+        id={appointment.id}
+        time={appointment.time}
+        interview={interview}
+      />
+    );
+  })
+
+
 
   // setDay function can remain because we are only using it to update our DayList component
   const setDay = day => setState({ ...state, day });
@@ -81,18 +96,7 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {dailyAppointments.map(appointment => {
-          const interview = getInterview(state, appointment.interview);
-          return (
-            <Appointment
-              key={appointment.id}
-              id={appointment.id}
-              time={appointment.time}
-              interview={interview}
-            />
-          );
-        })
-        }
+        {schedule}
         <Appointment key="last" time="5pm" />
       </section>
     </main>
