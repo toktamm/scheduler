@@ -14,3 +14,15 @@ export function getAppointmentsForDay(state, day) {
 
 
 
+export function getInterview(state, interview) {
+  // recieving an object with interview id
+  // add interview object to replace interviewer id
+  // interview.interviewer gives the id
+  if(!interview) {
+    return null;
+  }
+  // const obj = { ...interview, interviewer: state.interviewers[interview.interviewer] };
+  // console.log(obj);
+  return { ...interview, interviewer: state.interviewers[interview.interviewer] };
+} 
+
