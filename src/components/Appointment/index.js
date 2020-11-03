@@ -3,11 +3,14 @@ import React from 'react';
 import './styles.scss';
 import Header from 'components/Appointment/Header';
 import Show from 'components/Appointment/Show';
-import Empty from 'components/Appointment/Empty'; import Form from 'components/Appointment/Form';
+import Empty from 'components/Appointment/Empty';
+import Form from 'components/Appointment/Form';
+import Status from 'components/Appointment/Status';
 import useVisualMode from '../../hooks/useVisualMode'
 const EMPTY = 'EMPTY';
 const SHOW = 'SHOW';
 const CREATE = 'CREATE';
+const SAVING = 'SAVING';
 
 
 
@@ -18,6 +21,17 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
+  function save(name, interviewer) {
+    if (name && interviewer) {
+      const interview = {
+        student: name,
+        interviewer
+      };
+      transition(SAVING)
+      props.bookInterview(props.id, interview)
+        .then(() => transition(SHOW))
+    }
+  }
 
   return (
     <article className="appointment">
@@ -34,8 +48,13 @@ export default function Appointment(props) {
       {mode === CREATE && (
         <Form
           interviewers={props.interviewers}
-          onSave={() => console.log("Clicked onSave")}
-          onCancel={() => back()}
+          onSave={(name, interviewer) => save(name, interviewer)}
+          onCancel={() => back(EMPTY)}
+        />
+      )}
+      {mode === SAVING && (
+        <Status
+          message='Saving'
         />
       )}
     </article>
