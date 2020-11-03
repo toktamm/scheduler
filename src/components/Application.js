@@ -37,10 +37,17 @@ export default function Application(props) {
 
 
   function bookInterview(id, interview) {
+
+    // console.log("bookInterview: ", id, interview);
+    // copying appointment object at particular id
+    // replacing interview null to interview with data
+
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
     };
+
+    // copying appointmentS object and updating with new appointment data
     const appointments = {
       ...state.appointments,
       [id]: appointment
@@ -57,6 +64,32 @@ export default function Application(props) {
 
 
 
+  function cancelInterview(id) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    }
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    }
+    return axios
+      .delete(`/api/appointments/${id}`)
+      .then(() => {
+        setState({
+          ...state,
+          appointments
+        })
+      })
+  }
+
+
+
+
+
+
+
+
   const schedule = dailyAppointments.map(appointment => {
     const interview = getInterview(state, appointment.interview);
     // optional approach:
@@ -69,6 +102,7 @@ export default function Application(props) {
         interview={interview}
         interviewers={dailyInterviewers}
         bookInterview={bookInterview}
+        cancelInterview={cancelInterview}        
       />
     );
   })
