@@ -137,14 +137,14 @@ storiesOf("InterviewerList", module)
   .add("Initial", () => (
     <InterviewerList
       interviewers={interviewers}
-      setInterviewer={action("setInterviewer")}
+      onChange={action("setInterviewer")}
     />
   ))
   .add("Preselected", () => (
     <InterviewerList
       interviewers={interviewers}
-      interviewer={3}
-      setInterviewer={action("setInterviewer")}
+      value={3}
+      onChange={action("setInterviewer")}
     />
   ));
 
@@ -170,7 +170,7 @@ storiesOf("Appointment", module)
       />
       <Appointment id="last" time="1pm" />
     </>
-  ))  
+  ))
   .add("Header", () => <Header time="12pm" />)
   .add("Empty", () => <Empty onAdd={action("onAdd")} />)
   .add("Show", () => <Show student='Lydia Miller-Jones' interviewer={interviewer} onEdit={action("onEdit")} onDelete={action("onDelete")} />)
