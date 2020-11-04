@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 
-// import { getAppointmentsForDay } from '../helpers/selectors'
-
 
 
 export default function useApplicationData() {
@@ -15,7 +13,6 @@ export default function useApplicationData() {
   });
 
 
-  // setDay function can remain because we are only using it to update our DayList component
   const setDay = day => setState({ ...state, day });
 
   useEffect(() => {
@@ -32,18 +29,6 @@ export default function useApplicationData() {
       }))
     })
   }, []);
-
-
-  // to calculate how many spots are left, we need to check how many interviews are set to null
-  // for each day and return a new days array
-  // const availableSpots = state => {
-  //   const newState = { ...state }
-  //   const days = newState.days.map(day => {
-  //     const spots = getAppointmentsForDay(newState, day.name).filter(appointment => appointment.interview === null).length;
-  //     return { ...day, spots }
-  //   })
-  //   return days;
-  // }
 
 
 
@@ -64,7 +49,7 @@ export default function useApplicationData() {
         return elem;
       })
     }
-    
+
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
@@ -76,8 +61,6 @@ export default function useApplicationData() {
     return axios
       .put(`/api/appointments/${id}`, appointment)
       .then(() => {
-        // setState(prev => ({ ...prev, appointments }))
-        // setState(prev => ({ ...prev, days: availableSpots(prev) }))
         setState(prev => ({ ...prev, appointments, days }));
       })
   }
@@ -105,8 +88,6 @@ export default function useApplicationData() {
     return axios
       .delete(`/api/appointments/${id}`)
       .then(() => {
-        // setState(prev => ({ ...prev, appointments }))
-        // setState(prev => ({ ...prev, days: availableSpots(prev) }))
         setState(prev => ({ ...prev, appointments, days }));
       })
   }
