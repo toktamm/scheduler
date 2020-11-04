@@ -16,13 +16,17 @@ export default function useVisualMode(initial) {
   }
 
   function back() {
-    if (history.length > 1) {
-      const newHistory = history.slice(0, history.length - 1)
-      setHistory(newHistory)
-      const newMode = newHistory[newHistory.length - 1]
-      setMode(newMode)
-    }
-
+    setHistory(prev => {
+      if (prev.length > 1) {
+        const newHistory = prev.slice(0, prev.length - 1);
+        const newMode = newHistory[newHistory.length - 1];
+        setMode(newMode);
+        return newHistory;
+      }
+      else {
+        return prev;
+      }
+    });
   }
 
 
