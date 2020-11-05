@@ -4,12 +4,14 @@ import {
   render,
   cleanup,
   waitForElement,
+  waitForElementToBeRemoved,
   fireEvent,
   getByText,
   prettyDOM,
   getAllByTestId,
   getByAltText,
-  getByPlaceholderText
+  getByPlaceholderText,
+  queryByText
 } from "@testing-library/react";
 
 
@@ -36,7 +38,7 @@ describe("Application", () => {
 
   it("loads data, books an interview and reduces the spots remaining for the first day by 1", async () => {
 
-    const { container } = render(<Application />);
+    const { container, debug } = render(<Application />);
 
     await waitForElement(() => getByText(container, "Archie Cohen"));
 
@@ -65,14 +67,22 @@ describe("Application", () => {
 
     expect(getByText(appointment, "Saving")).toBeInTheDocument();
 
-    await waitForElement(() => getByText(appointment, "Lydia Miller-Jones"));
+    await waitForElement(() => queryByText(appointment, "Lydia Miller-Jones"));
+
+    // debug();
+
+    const day = getAllByTestId(container, "day").find(day => 
+      queryByText(day, "Monday")
+      );
+
+    console.log(prettyDOM(day));
+
+    expect(getByText(day, "no spots remaining")).toBeInTheDocument();
+
 
 
 
   });
-
-
-
 
 
 
