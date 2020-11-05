@@ -174,13 +174,51 @@ describe("Application", () => {
 
   });
 
-  it("shows the save error when failing to save an appointment", () => {
+ 
+
+  it("shows the save error when failing to save an appointment", async () => {
+    // make sure that the first request to our axios mocked library will reject
+    axios.put.mockRejectedValueOnce();
+
+    // Render the Application
+    const { container } = render(<Application />);
+
+    // Wait until the text "Archie Cohen" is displayed.
+    await waitForElement(() => getByText(container, "Archie Cohen"));
+
+    // search for an component that is empty by find an Add button
+    const appointment = getAllByTestId(container, "appointment").find(
+      appointment => queryByAltText(appointment, "Add")
+    );
+
+    // to test that the saving does not work we need to click the add button, change the student name input, select an interviewer and click the save button.
+    fireEvent.click(getByAltText(appointment, "Add"));
+    fireEvent.change(getByPlaceholderText(appointment, /enter student name/i), {
+      target: { value: "Lydia Miller-Jones" }
+    })
+    fireEvent.click(getByAltText(appointment, "Sylvia Palmer"));
+    fireEvent.click(getByText(appointment, "Save"));
+
+    // Check that the element with the text "Saving" is displayed.
+    expect(getByText(appointment, "Saving")).toBeInTheDocument();
+
+    // Check if the save has failed by waiting saving to disappear and confirm that the error msg is in our component
+    await waitForElementToBeRemoved(() => queryByText(appointment, "Saving"));
+    expect(getByText(appointment, "Can not save the appointment!")).toBeInTheDocument();
+
+    // Press the close image and make sure that the error is not in the document and that the form is showing again
+    fireEvent.click(getByAltText(appointment, "Close"));
+    expect(queryByText(appointment, "Error")).not.toBeInTheDocument();
+    expect(getByText(appointment, "Save")).toBeInTheDocument();
 
   });
 
   it("shows the delete error when failing to delete an existing appointment", () => {
+    axios.delete.mockRejectedValueOnce();
 
   });
+
+
 
 
 
