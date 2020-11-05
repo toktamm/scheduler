@@ -1,5 +1,8 @@
 import React from "react";
 
+import axios from "axios";
+
+
 import {
   render,
   cleanup,
@@ -13,7 +16,8 @@ import {
   getByPlaceholderText,
   queryByText,
   queryByAltText,
-  getByTestId
+  getByTestId,
+  getByDisplayValue
 } from "@testing-library/react";
 
 
@@ -107,7 +111,7 @@ describe("Application", () => {
     fireEvent.click(queryByText(appointment, "Confirm"));
 
     // 6. Check that the element with the text "Deleting" is displayed.
-    expect(getByText(appointment, "Deleting")).toBeInTheDocument();
+    expect(getByText(appointment, /deleting/i)).toBeInTheDocument();
 
     // 7. Wait until the element with the "Add" button is displayed.
     await waitForElement(() => getByAltText(appointment, "Add"));
@@ -128,7 +132,58 @@ describe("Application", () => {
 
 
 
-  
+
+
+
+  it("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
+    // 1. Render the Application.
+    const { container } = render(<Application />);
+
+    // 2. Wait until the text "Archie Cohen" is displayed.
+    await waitForElement(() => getByText(container, "Archie Cohen"));
+
+    // 3. Click the "edit" button on the booked appointment.
+    const appointment = getAllByTestId(container, "appointment").find(
+      appointment => queryByText(appointment, "Archie Cohen")
+    );
+    fireEvent.click(getByAltText(appointment, "Edit"));
+
+    // 4. Check that the form is shown (search for the Save button)
+    expect(getByText(appointment, "Save")).toBeInTheDocument();
+
+    // 5. change the student name (from "Archie Cohen" to "Lydia Miller-Jones") and the interviewer (from "Tori Malcolm" to "Sylvia Palmer"):
+    fireEvent.change(getByPlaceholderText(appointment, /enter student name/i), {
+      target: { value: "Lydia Miller-Jones" }
+    });
+    fireEvent.click(getByAltText(appointment, "Sylvia Palmer"));
+
+    // 6. Click the "Save" button to edit the appointment.
+    fireEvent.click(getByText(appointment, "Save"));
+
+    // 7. Check that the element with the text "Saving" is displayed.
+    expect(getByText(appointment, "Saving")).toBeInTheDocument();
+
+    // 8. Wait until the element with the new student name is displayed.
+    await waitForElement(() => queryByText(appointment, "Lydia Miller-Jones"));
+
+    // 9. Check that the DayListItem with the text "Monday" also has the text "1 spot remaining".
+    const day = getAllByTestId(container, "day").find(day =>
+      queryByText(day, "Monday")
+    );
+    expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
+
+  });
+
+  it("shows the save error when failing to save an appointment", () => {
+
+  });
+
+  it("shows the delete error when failing to delete an existing appointment", () => {
+
+  });
+
+
+
 
 
 });
