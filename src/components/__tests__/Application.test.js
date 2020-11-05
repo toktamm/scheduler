@@ -218,6 +218,8 @@ describe("Application", () => {
 
   it("shows the delete error when failing to delete an existing appointment", async () => {
 
+    axios.delete.mockRejectedValueOnce();
+
     // 1. Render the Application.
     const { container } = render(<Application />);
 
@@ -250,10 +252,6 @@ describe("Application", () => {
     expect(getByAltText(appointment, "Delete")).toBeInTheDocument();
   });
 
-  it("shows the delete error when failing to delete an existing appointment", () => {
-    axios.delete.mockRejectedValueOnce();
-
-  });
 
 });
 
