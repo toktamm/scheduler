@@ -174,7 +174,7 @@ describe("Application", () => {
 
   });
 
- 
+
 
   it("shows the save error when failing to save an appointment", async () => {
     // make sure that the first request to our axios mocked library will reject
@@ -213,15 +213,49 @@ describe("Application", () => {
 
   });
 
+
+
+
+  it("shows the delete error when failing to delete an existing appointment", async () => {
+
+    // 1. Render the Application.
+    const { container } = render(<Application />);
+
+    // 2. Wait until the text "Archie Cohen" is displayed.
+    await waitForElement(() => getByText(container, "Archie Cohen"));
+
+    // 3. Click the "Delete" button on the booked appointment.
+    const appointment = getAllByTestId(container, "appointment").find(
+      appointment => queryByText(appointment, "Archie Cohen")
+    );
+    fireEvent.click(queryByAltText(appointment, "Delete"));
+
+    // 4. Check that the confirmation message is shown.
+    expect(getByText(appointment, "Are you sure you want to delete this appointment?")).toBeInTheDocument();
+
+    // 5. Click the "Confirm" button on the confirmation.
+    fireEvent.click(queryByText(appointment, "Confirm"));
+
+
+    // 6. Check that the element with the text "Deleting" is displayed.
+    expect(getByText(appointment, "Deleting")).toBeInTheDocument();
+
+    // 7. Check if the deletion has failed by waiting for deleting to disappear and confirm that the error msg is in our component
+    await waitForElementToBeRemoved(() => queryByText(appointment, "Deleting"));
+    expect(getByText(appointment, "Can not delete the appointment!")).toBeInTheDocument();
+
+    // 8. Press the close image and make sure that the error is not in the document and that the form is showing again
+    fireEvent.click(getByAltText(appointment, "Close"));
+    expect(queryByText(appointment, "Error")).not.toBeInTheDocument();
+    expect(getByAltText(appointment, "Delete")).toBeInTheDocument();
+  });
+
   it("shows the delete error when failing to delete an existing appointment", () => {
     axios.delete.mockRejectedValueOnce();
 
   });
 
-
-
-
-
-
-
 });
+
+
+
