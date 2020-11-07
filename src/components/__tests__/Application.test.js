@@ -48,17 +48,11 @@ describe("Application", () => {
 
     await waitForElement(() => getByText(container, "Archie Cohen"));
 
-    // console.log(prettyDOM(container));
-
-    // const appointments = getAllByTestId(container, "appointment");
-
-    // console.log(prettyDOM(appointments));
 
     const appointments = getAllByTestId(container, "appointment");
     const appointment = appointments[0];
 
     fireEvent.click(getByAltText(appointment, "Add"));
-    // console.log(prettyDOM(appointment));
 
     fireEvent.change(getByPlaceholderText(appointment, /enter student name/i), {
       target: { value: "Lydia Miller-Jones" }
@@ -68,20 +62,13 @@ describe("Application", () => {
 
     fireEvent.click(getByText(appointment, "Save"));
 
-    // console.log(prettyDOM(appointment));
-
-
     expect(getByText(appointment, "Saving")).toBeInTheDocument();
 
     await waitForElement(() => queryByText(appointment, "Lydia Miller-Jones"));
 
-    // debug();
-
     const day = getAllByTestId(container, "day").find(day =>
       queryByText(day, "Monday")
     );
-
-    // console.log(prettyDOM(day));
 
     expect(getByText(day, "no spots remaining")).toBeInTheDocument();
 
@@ -115,11 +102,6 @@ describe("Application", () => {
 
     // 7. Wait until the element with the "Add" button is displayed.
     await waitForElement(() => getByAltText(appointment, "Add"));
-
-    //alternative solution (test condition means the appointment was removed)
-    // await waitForElementToBeRemoved(() => getByText(appointment, /deleting/i));
-    // expect(getByAltText(appointment, /add/i)).toBeInTheDocument();
-
 
     // 8. Check that the DayListItem with the text "Monday" also has the text "2 spots remaining".
     const day = getAllByTestId(container, "day").find(day =>
